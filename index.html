@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>index</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        hello electron!
+        <p id="text"></p>
+        <script>
+
+        const {ipcRenderer} = require('electron');
+        const moment = require('moment');
+
+        const text = document.getElementById('text');
+
+        const canvas = document.createElement('canvas');
+        canvas.height = 24;
+        canvas.width = 160;
+        const context = canvas.getContext('2d');
+
+        setInterval(function () {
+            const s = moment().format('YYYY-MM-DD HH:mm:ss');
+            context.clearRect(0, 0, 160, 24);
+            context.font = '16px Helvetica Neue';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(s, 80, 12);
+            ipcRenderer.send('tray-update', canvas.toDataURL('image/png', 1));
+        }, 1000);
+
+        </script>
+    </body>
+</html>

@@ -2,7 +2,7 @@
   "name": "scalar",
   "version": "1.0.0",
   "description": "simple calendar for desktop",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/jinzhubaofu/scalar/issues"
   },
-  "homepage": "https://github.com/jinzhubaofu/scalar#readme"
+  "homepage": "https://github.com/jinzhubaofu/scalar#readme",
+  "dependencies": {
+    "moment": "^2.13.0"
+  }
 }
