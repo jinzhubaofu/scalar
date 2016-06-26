@@ -4,7 +4,7 @@
  */
 
 const electron = require('electron');
-const {nativeImage, ipcMain, app, BrowserWindow, Tray, Menu} = electron;
+const {nativeImage, ipcMain, app, BrowserWindow, Tray} = electron;
 
 let win;
 let tray;
@@ -13,7 +13,10 @@ function createWindow() {
 
     win = new BrowserWindow({
         witdh: 800,
-        height: 600
+        height: 600,
+        frame: false,
+        show: false,
+        transparent: true
     });
 
     win.loadURL(`file://${__dirname}/index.html`);
@@ -24,23 +27,15 @@ function createWindow() {
         win = null;
     });
 
+    win.on('blur', function () {
+        if (!win.webContents.isDevToolsFocused()) {
+            win.hide();
+        }
+    });
+
 }
 
-app.on('ready', function () {
-
-    createWindow();
-
-    tray = new Tray(`${__dirname}/src/img/icon.png`);
-
-    const menu = Menu.buildFromTemplate([{
-        label: 'Item1', type: 'radio'
-    }]);
-
-    tray.setToolTip('this is scalar');
-
-    tray.setContextMenu(menu);
-
-});
+app.on('ready', createWindow);
 
 app.on('window-all-closed', function () {
 
@@ -59,7 +54,38 @@ app.on('activate', function () {
 });
 
 ipcMain.on('tray-update', function (e, dataURL) {
-    tray.setImage(nativeImage.createFromDataURL(dataURL));
+
+    const image = nativeImage.createFromDataURL(dataURL);
+
+    if (!tray) {
+
+        tray = new Tray(image);
+
+        tray.on('click', function (e, bounds) {
+
+            const {x, y, width, height} = bounds;
+
+            if (win.isVisible()) {
+                win.hide();
+            }
+            else {
+                win.setBounds({
+                    width: 500,
+                    height: 500,
+                    x: x + (width - 500) / 2,
+                    y: y + height
+                }, true);
+                win.show();
+            }
+
+        });
+
+    }
+    else {
+        tray.setImage(image);
+    }
+
+
 });
 
 // const cavnas = remote.require(`${__dirname}/src/web/canvas.js`);

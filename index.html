@@ -1,36 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="">
     <head>
         <meta charset="utf-8">
         <title>index</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html {
+                height: 100%
+            }
+            body {
+                font-size: 16px;
+                padding-top: 8px;
+                height: 100%
+            }
+            main {
+                display: flex;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                background-color: rgba(255, 255, 255, .8);
+                border-radius: 5px
+            }
+
+            main:before {
+                position: absolute;
+                width: 0;
+                height: 0;
+                border-width: 11px;
+                border-style: solid;
+                border-color: transparent transparent #fff transparent;
+                top: -22px;
+                left: 50%;
+                margin-left: -11px;
+                font-size: 0;
+                line-height: 0;
+                content: '';
+                z-index: 2;
+            }
+
+            main:after {
+                position: absolute;
+                width: 0;
+                height: 0;
+                border-width: 12px;
+                border-style: solid;
+                border-color: transparent transparent #aaa transparent;
+                top: -24px;
+                left: 50%;
+                margin-left: -12px;
+                font-size: 0;
+                line-height: 0;
+                content: '';
+                z-index: 1
+            }
+
+        </style>
     </head>
     <body>
-        hello electron!
-        <p id="text"></p>
+        <main></main>
         <script>
-
-        const {ipcRenderer} = require('electron');
-        const moment = require('moment');
-
-        const text = document.getElementById('text');
-
-        const canvas = document.createElement('canvas');
-        canvas.height = 24;
-        canvas.width = 160;
-        const context = canvas.getContext('2d');
-
-        setInterval(function () {
-            const s = moment().format('YYYY-MM-DD HH:mm:ss');
-            context.clearRect(0, 0, 160, 24);
-            context.font = '16px Helvetica Neue';
-            context.textAlign = 'center';
-            context.textBaseline = 'middle';
-            context.fillText(s, 80, 12);
-            ipcRenderer.send('tray-update', canvas.toDataURL('image/png', 1));
-        }, 1000);
-
+        const script = document.createElement('script');
+        script.src = process.env.ENV = 'dev' ? 'http://localhost:9000/dist/bundle.js' : './dist/bundle.js';
+        document.body.appendChild(script);
         </script>
     </body>
 </html>
